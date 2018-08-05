@@ -15,7 +15,7 @@ class DBHelper {
   /**
    * Fetch all restaurants.
    */
-//Task: convert xhr object to fetch 
+//Task: convert xhr object to fetch
   static fetchRestaurants(callback) {
 
     function addRestaurants(data){
@@ -23,11 +23,11 @@ class DBHelper {
       DBHelper.addToDatabase(restaurants);
       return restaurants;
     }
-    
+
     function requestError(e, part){
       const error = (`There was a failed request with error ${part}`);
       callback(error, null);
-    }  
+    }
 
     DBHelper.getRestaurantsFromCache().then(restaurants => {
       if(restaurants.length) {
@@ -200,4 +200,39 @@ class DBHelper {
     return marker;
   }
 
+  //Base functions
+  static openDatabase() {
+    // If the browser doesn't support service worker,
+    // we don't care about having a database
+    if (!navigator.serviceWorker) {
+      return Promise.resolve();
+    }
+
+    return idb.open('restaurant', 1, upgradeDb => {
+      var store = upgradeDb.createObjectStore('restaurants', {
+        keyPath: 'id'
+      });
+    });
+  }
+
+  static addToDatabase(restaurantList) {
+    var dbPromise = this.openDatabase();
+
+    return dbPromise.then(db => {
+      if (!db) return;
+      const tx = db.transaction('restaurants', 'readwrite');
+      const restaurantStore = tx.objectStore('restaurants');
+      restaurantList.forEach(restaurant => {
+        restaurantStore.put(restaurant);
+      });
+    });
+    return tx.complete;
+  }
+
+  static getRestaurantsFromCache() {
+    return DBHelper.openDatabase().then(db => {
+      if (!db) return;
+      return db.transaction('restaurants').objectStore('restaurants').getAll();
+    });
+  }
 }

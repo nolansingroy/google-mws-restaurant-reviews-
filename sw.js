@@ -2,8 +2,10 @@ var Cache_Name = 'Cache-v2';
 var urlsToCache = [
   '/',
   '/restaurant.html',
+  '/favicon.ico',
   '/index.html',
   '/css/styles.css',
+  '/manifest.json',
   '/data/restaurants.json',
   '/img/1.jpg',
   '/img/2.jpg',
@@ -17,7 +19,8 @@ var urlsToCache = [
   '/img/10.jpg',
   '/js/main.js',
   '/js/dbhelper.js',
-  '/js/restaurant_info.js'
+  '/js/restaurant_info.js',
+  '/node_modules/idb/lib/idb.js'
 ];
 
 self.addEventListener('install',function (event) {
@@ -72,35 +75,17 @@ self.addEventListener('fetch', function(event) {
     );
 });
 
-/*
-// fetching data from cache
-self.addEventListener('fetch', function (event) {
-	event.respondWith(caches.match(event.request).then(function (response) {
-		if (response !== undefined) {
-			return response;
-		} else {
-			return fetch(event.request).then(function (response) {
-				var responseClone = response.clone();
-				caches.open(Cache_Name).then(function (cache) {
-					cache.put(event.request, responseClone);
-				});
-				return response;
-			});
-		}
-	}));
-});
-*/
-/*
-//Activate SW
 self.addEventListener('activate', function (event) {
-	event.waitUntil(
-		caches.keys().then(function (keys) {
-			return Promise.all(keys.map(function (key, i) {
-				if (key !== Cache_Name) {
-					return caches.delete(keys[i]);
-				}
-			}));
-		})
-	);
+    event.waitUntil(
+        caches.keys().then(function (cacheNames) {
+            return Promise.all(
+                cacheNames.filter(function (cacheName) {
+                    return cacheName.startsWith('Cache-v') &&
+                        cacheName != restaurantsCache;
+                }).map(function (cacheName) {
+                    return caches.delete(cacheName);
+                })
+            )
+        })
+    );
 });
-*/
