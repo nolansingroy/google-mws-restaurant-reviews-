@@ -6,6 +6,7 @@
   <meta chrset="utf-8">
   <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="manifest" href="manifest.json">
   <title>Restaurant Reviews</title>
 </head>
 
@@ -34,7 +35,15 @@
       <ul id="restaurants-list"></ul>
     </section>
   </main>
-  <!--serviceWorker-->
+
+  <script type="application/javascript" charset="utf-8" src="node_modules/idb/lib/idb.js"></script>
+
+  <script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>
+  <script type="application/javascript" charset="utf-8" src="js/main.js"></script>
+
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC5_Noee-qKJ9CyY5D1eBA2DRMtLHPAiPQ&libraries=places&callback=initMap&id=mapframe"></script>
+
+  <!--Service Worker-->
   <script>
     if ('serviceWorker in navigatior') {
       navigator.serviceWorker.register('/sw.js').then(function() {
@@ -44,14 +53,6 @@
       });
     }
   </script>
-
-  <script type="application/javascript" charset="utf-8" src="node_modules/idb/lib/idb.js"></script>
-  
-  <script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>
-  <script type="application/javascript" charset="utf-8" src="js/main.js"></script>
-
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC5_Noee-qKJ9CyY5D1eBA2DRMtLHPAiPQ&libraries=places&callback=initMap&id=mapframe"></script>
-
 
   <footer id="footer">
     Copyright (c) 2017 <a href="/" tabindex="0"><strong>Restaurant Reviews</strong></a> All Rights Reserved.

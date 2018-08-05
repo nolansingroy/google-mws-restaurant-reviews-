@@ -1,3 +1,4 @@
+//import idb from 'idb';
 /**
  * Common database helper functions.
  */
@@ -7,11 +8,28 @@ class DBHelper {
    * Database URL.
    * Change this to restaurants.json file location on your server.
    */
-  static get DATABASE_URL() {
-    const port = 1337 // Change this to your server port
-    return `http://localhost:${port}/data/restaurants.json`;
-  }
 
+   static get DATABASE_URL() {
+     return 'http://localhost:1337/restaurants';
+   }
+
+   /**
+    * Fetch all restaurants.
+    */
+  /** static fetchRestaurants(callback) {
+     fetch(`${DBHelper.DATABASE_URL}`)
+         .then(function(response) {
+             return response.json();
+         })
+         .then(data => callback(null, data))
+         .catch(error => callback(`Request failed. Returned status of ${error.statusText}`, null));
+ }*/
+
+   /**
+  static get DATABASE_URL() {
+    const port = 1337; // Change this to your server port
+    return `http://localhost:${port}/restaurants`;
+  }*/
   /**
    * Fetch all restaurants.
    */
@@ -178,12 +196,11 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant) {
-    return (`/img/${restaurant.photograph}`);
+    return (`/img/${restaurant.photograph}.jpg`);
   }
-  /** ---- insert imageSrcsetForResturant below----*/
 
   static imageSrcSetForResturant(restaurant) {
-    return (`/img/${restaurant.photograph} 1x, /img/${restaurant.photograph} 2x, /img/${restaurant.photograph} 2x`);
+    return (`/img/${restaurant.photograph}.jpg 1x, /img/${restaurant.photograph}.jpg 2x, /img/${restaurant.photograph}.jpg 2x`);
   }
 
   /**
