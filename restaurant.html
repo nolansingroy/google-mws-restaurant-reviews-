@@ -2,10 +2,9 @@
 <html lang="en-US">
 
 <head>
-  <!-- Normalize.css for better cross-browser consistency -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta charset="utf-8">
-  <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
+  <!-- <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" /> -->
   <!-- Main CSS file -->
   <link rel="stylesheet" href="css/styles.css" type="text/css">
   <title>Restaurant Info</title>
@@ -58,13 +57,26 @@
   <!-- End footer -->
 
   <!-- Beginning scripts -->
-
+  <!-- IDB Library -->
+  <script type="application/javascript" charset="utf-8" src="node_modules/idb/lib/idb.js"></script>
   <!-- Database helpers -->
   <script type="text/javascript" src="js/dbhelper.js"></script>
   <!-- Main javascript file -->
   <script type="text/javascript" src="js/restaurant_info.js"></script>
   <!-- Google Maps -->
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC5_Noee-qKJ9CyY5D1eBA2DRMtLHPAiPQ&libraries=places&callback=initMap"></script>
+  <!-- Register the service worker -->
+  <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/sw.js').then(function() {
+        console.log('Registration worked!');
+      }).catch(function() {
+      console.log('Registration failed!');
+      });
+    });
+  }
+  </script>
   <!-- End scripts -->
 
 </body>

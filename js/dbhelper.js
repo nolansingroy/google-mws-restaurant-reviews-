@@ -1,39 +1,19 @@
-//import idb from 'idb';
 /**
  * Common database helper functions.
  */
 class DBHelper {
-
   /**
    * Database URL.
-   * Change this to restaurants.json file location on your server.
+   * Link to the server.
    */
-
-   static get DATABASE_URL() {
-     return 'http://localhost:1337/restaurants';
-   }
-
-   /**
-    * Fetch all restaurants.
-    */
-  /** static fetchRestaurants(callback) {
-     fetch(`${DBHelper.DATABASE_URL}`)
-         .then(function(response) {
-             return response.json();
-         })
-         .then(data => callback(null, data))
-         .catch(error => callback(`Request failed. Returned status of ${error.statusText}`, null));
- }*/
-
-   /**
   static get DATABASE_URL() {
-    const port = 1337; // Change this to your server port
+    const port = 1337 // Change this to your server port
     return `http://localhost:${port}/restaurants`;
-  }*/
+  }
+
   /**
    * Fetch all restaurants.
    */
-//Task: convert xhr object to fetch
   static fetchRestaurants(callback) {
 
     function addRestaurants(data){
@@ -59,37 +39,40 @@ class DBHelper {
     }).catch(error => {
       callback(error, null);
     })
-}
- /**
- static fetchRestaurants(callback) {
-    let xhr = new XMLHttpRequest();
-    xhr.open('GET', DBHelper.DATABASE_URL);
-    xhr.onload = () => {
-      if (xhr.status === 200) { // Got a success response from server!
-        const json = JSON.parse(xhr.responseText);
-        const restaurants = json.restaurants;
-        callback(null, restaurants);
-      } else { // Oops!. Got an error from server.
-        const error = (`Request failed. Returned status of ${xhr.status}`);
-        callback(error, null);
-      }
-    };
-    xhr.send();
   }
+  /**
+  ---- OLD XHR method depricated Please use Fetch API-------
+
+       static fetchRestaurants(callback) {
+       let xhr = new XMLHttpRequest();
+       xhr.open('GET', DBHelper.DATABASE_URL);
+       xhr.onload = () => {
+         if (xhr.status === 200) { // Got a success response from server!
+           const json = JSON.parse(xhr.responseText);
+           const restaurants = json.restaurants;
+           callback(null, restaurants);
+         } else { // Oops!. Got an error from server.
+           const error = (`Request failed. Returned status of ${xhr.status}`);
+           callback(error, null);
+         }
+       };
+       xhr.send();
+     }
 */
+
   /**
    * Fetch a restaurant by its ID.
    */
+
   static fetchRestaurantById(id, callback) {
-    // fetch all restaurants with proper error handling.
-    DBHelper.fetchRestaurants((error, restaurants) => {
+   DBHelper.fetchRestaurants((error, restaurants) => {
       if (error) {
         callback(error, null);
       } else {
         const restaurant = restaurants.find(r => r.id == id);
-        if (restaurant) { // Got the restaurant
+        if (restaurant) {
           callback(null, restaurant);
-        } else { // Restaurant does not exist in the database
+        } else {
           callback('Restaurant does not exist', null);
         }
       }
@@ -196,12 +179,12 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant) {
-    return (`/img/${restaurant.photograph}.jpg`);
+    return (`/img/${restaurant.photograph}.webp`);
   }
-
-  static imageSrcSetForResturant(restaurant) {
-    return (`/img/${restaurant.photograph}.jpg 1x, /img/${restaurant.photograph}.jpg 2x, /img/${restaurant.photograph}.jpg 2x`);
-  }
+  //Its more responsive to use the srcset atrribute
+  static imageSrcSetForRestaurant(restaurant) {
+    return (`/img/${restaurant.photograph}.webp 1x, /img/${restaurant.photograph}.webp 2x, /img/${restaurant.photograph}.webp 2x`);
+ }
 
   /**
    * Map marker for a restaurant.
@@ -212,10 +195,11 @@ class DBHelper {
       title: restaurant.name,
       url: DBHelper.urlForRestaurant(restaurant),
       map: map,
-      animation: google.maps.Animation.DROP
-    });
+      animation: google.maps.Animation.DROP}
+    );
     return marker;
   }
+
 
   //Base functions
   static openDatabase() {
@@ -252,4 +236,5 @@ class DBHelper {
       return db.transaction('restaurants').objectStore('restaurants').getAll();
     });
   }
+
 }
