@@ -30,6 +30,7 @@ class DBHelper {
     DBHelper.getRestaurantsFromCache().then(restaurants => {
       if(restaurants.length) {
         return Promise.resolve(restaurants);
+        console.log('restaurants.length called');
       } else {
         return fetch(DBHelper.DATABASE_URL).then(response => response.json())
         .then(addRestaurants).catch(e => requestError(e, 'json'));
@@ -234,6 +235,7 @@ class DBHelper {
     return DBHelper.openDatabase().then(db => {
       if (!db) return;
       return db.transaction('restaurants').objectStore('restaurants').getAll();
+      console.log('get restarurants from cache');
     });
   }
 
