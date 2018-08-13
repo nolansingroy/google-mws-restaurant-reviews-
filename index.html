@@ -2,12 +2,14 @@
 <html lang="en-US">
 
 <head>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta chrset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="theme-color" content="#262932" chrset="utf-8">
   <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
   <link rel="stylesheet" href="css/styles.css">
   <link rel="manifest" href="manifest.json">
+
   <title>Restaurant Reviews</title>
+
 </head>
 
 <body>
@@ -35,13 +37,17 @@
       <ul id="restaurants-list"></ul>
     </section>
   </main>
+<!-- JS Scripts-->
+<!-- Load the polyfill first. -->
+<!-- <script src="js/intersection-observer.js"></script> -->
 
+<!--Minified jsbundle-->
   <script type="application/javascript" charset="utf-8" src="js/all.js"></script>
 
   <!-- <script type="application/javascript" charset="utf-8" src="js/idb.js"></script>
   <script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>
   <script type="application/javascript" charset="utf-8" src="js/main.js"></script> -->
-
+<!-- Google Maps-->
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC5_Noee-qKJ9CyY5D1eBA2DRMtLHPAiPQ&libraries=places&callback=initMap&id=mapframe"></script>
 
   <!--Service Worker-->

@@ -127,8 +127,20 @@ const resetRestaurants = (restaurants) => {
  */
 const fillRestaurantsHTML = (restaurants = self.restaurants) => {
   const ul = document.getElementById('restaurants-list');
+  // Referenced https://developers.google.com/web/fundamentals/performance/lazy-loading-guidance/images-and-video/
+  let lazyImageObserver = new IntersectionObserver(function (entries, observer) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        let lazyImage = entry.target;
+        lazyImage.src = lazyImage.dataset.src;
+        lazyImage.srcset = lazyImage.dataset.srcset;
+        lazyImageObserver.unobserve(lazyImage);
+      }
+    });
+  });
+
   restaurants.forEach(restaurant => {
-    ul.append(createRestaurantHTML(restaurant));
+    ul.append(createRestaurantHTML(restaurant,lazyImageObserver));
   });
   addMarkersToMap();
 }
@@ -142,8 +154,11 @@ const createRestaurantHTML = (restaurant) => {
   const image = document.createElement('img');
   image.className = 'restaurant-img';
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  image.setAttribute('data-src', DBHelper.imageUrlForRestaurant(restaurant));
+
 image.srcset = DBHelper.imageSrcSetForRestaurant(restaurant);
-/*image.sizes = "270px"*/
+image.setAttribute('data-srcset', DBHelper.imageSrcSetForRestaurant(restaurant));
+image.sizes = "270px"
   image.alt = 'Photo of ' + restaurant.name;
   li.append(image);
 //create the element at h2 semantic rule

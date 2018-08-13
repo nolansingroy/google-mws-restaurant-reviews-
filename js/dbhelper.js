@@ -184,7 +184,7 @@ class DBHelper {
   }
   //Its more responsive to use the srcset atrribute
   static imageSrcSetForRestaurant(restaurant) {
-    return (`/img/${restaurant.photograph}.webp 1x, /img/${restaurant.photograph}.webp 2x, /img/${restaurant.photograph}.webp 2x`);
+    return (`/img/1x/${restaurant.photograph}.webp 1x, /img/2x/${restaurant.photograph}.webp 2x, /img/${restaurant.photograph}.webp 3x`);
  }
 
   /**
