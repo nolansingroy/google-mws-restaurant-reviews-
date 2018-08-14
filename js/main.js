@@ -155,13 +155,13 @@ const createRestaurantHTML = (restaurant,observer) => {
   image.className = 'restaurant-img';
 
 
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  image.setAttribute('data-src', DBHelper.imageUrlForRestaurant(restaurant));
-
-  image.srcset = DBHelper.imageSrcSetForRestaurant(restaurant);
-  image.setAttribute('data-srcset', DBHelper.imageSrcSetForRestaurant(restaurant));
-  image.sizes = "270px"
-  image.alt = 'Photo of ' + restaurant.name;
+  // image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  // image.setAttribute('data-src', DBHelper.imageUrlForRestaurant(restaurant));
+  //
+  // image.srcset = DBHelper.imageSrcSetForRestaurant(restaurant);
+  // image.setAttribute('data-srcset', DBHelper.imageSrcSetForRestaurant(restaurant));
+  // image.sizes = "270px"
+  // image.alt = 'Photo of ' + restaurant.name;
 
 const viewportMap = [{
     media: '(max-width: 320px)',

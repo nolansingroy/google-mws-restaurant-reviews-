@@ -18,7 +18,10 @@ var responsive = require('gulp-responsive');
 
 gulp.task("clean", del.bind(null, ["dist"]));
 
-gulp.task('default', ['copy', 'browser-sync', 'css', 'js','critical','images'], function() {})
+gulp.task('build', ['copy', 'css', 'js', 'images'], function() {})
+gulp.task('serve', ['critical','browser-sync'], function() {})
+
+gulp.task('default', ['copy', 'css', 'js','critical','images','browser-sync'], function() {})
 
 gulp.task('browser-sync', function() {
   browserSync.init({

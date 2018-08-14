@@ -5,7 +5,6 @@ var urlsToCache = [
   '/restaurant.html',
   '/manifest.json',
   '/css/styles.css',
-  '/img/undefined.webp',
   '/js/all.js',
   '/js/restaurant_all.js',
 ];
