@@ -148,19 +148,61 @@ const fillRestaurantsHTML = (restaurants = self.restaurants) => {
 /**
  * Create restaurant HTML.
  */
-const createRestaurantHTML = (restaurant) => {
+const createRestaurantHTML = (restaurant,observer) => {
   const li = document.createElement('li');
 
   const image = document.createElement('img');
   image.className = 'restaurant-img';
+
+
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
   image.setAttribute('data-src', DBHelper.imageUrlForRestaurant(restaurant));
 
-image.srcset = DBHelper.imageSrcSetForRestaurant(restaurant);
-image.setAttribute('data-srcset', DBHelper.imageSrcSetForRestaurant(restaurant));
-image.sizes = "270px"
+  image.srcset = DBHelper.imageSrcSetForRestaurant(restaurant);
+  image.setAttribute('data-srcset', DBHelper.imageSrcSetForRestaurant(restaurant));
+  image.sizes = "270px"
   image.alt = 'Photo of ' + restaurant.name;
-  li.append(image);
+
+const viewportMap = [{
+    media: '(max-width: 320px)',
+    suffix: '_280.jpg',
+    size: '280w',
+    slot: '236px'
+  },
+  {
+    media: '(min-width: 320px)',
+    suffix: '_335.jpg',
+    size: '335w',
+    slot: '291px'
+  },
+  {
+    media: '(min-width: 375px)',
+    suffix: '_385.jpg',
+    size: '385w',
+    slot: '341px'
+  },
+  {
+    media: '(min-width: 425px)',
+    suffix: '_432.jpg',
+    size: '432w',
+    slot: '290px'
+  },
+  {
+    media: '(min-width: 768px)',
+    suffix: '_432.jpg',
+    size: '432w',
+    slot: '290px'
+  }
+];
+
+
+DBHelper.generateSrcset(restaurant, viewportMap, image);
+
+//call to observe the image
+  observer.observe(image);
+
+li.append(image);
+
 //create the element at h2 semantic rule
 //name of restaurant is less important than the heading of pg
   const name = document.createElement('h2');

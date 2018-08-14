@@ -180,12 +180,47 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant) {
-    return (`/img/${restaurant.photograph}.webp`);
+    return (`/img/${restaurant.photograph}.jpg`);
   }
   //Its more responsive to use the srcset atrribute
-  static imageSrcSetForRestaurant(restaurant) {
-    return (`/img/1x/${restaurant.photograph}.webp 1x, /img/2x/${restaurant.photograph}.webp 2x, /img/${restaurant.photograph}.webp 3x`);
+ //  static imageSrcSetForRestaurant(restaurant) {
+ //    return (`/img/1x/${restaurant.photograph}.webp 1x, /img/2x/${restaurant.photograph}.webp 2x, /img/${restaurant.photograph}.webp 3x`);
+ // }
+
+ /**
+  * Restaurant srcset URL.
+  */
+ static srcsetUrlForRestaurant(restaurant, suffix, size) {
+   return (`/img/scaled/${restaurant.id}${suffix} ${size}`);
  }
+
+ /**
+  * Restaurant srcset.
+  */
+ static generateSrcset(restaurant, viewportMap, image) {
+   let srcsets = [];
+   let sizes = [];
+
+   for (const viewport of viewportMap) {
+     const size = DBHelper.sizeAttribute(viewport.media, viewport.slot);
+     const srcset = DBHelper.srcsetUrlForRestaurant(restaurant, viewport.suffix, viewport.size);
+     srcsets.push(srcset)
+     sizes.push(size)
+   }
+
+   image.alt = restaurant.name;
+   image.setAttribute('data-src', DBHelper.imageUrlForRestaurant(restaurant));
+   image.setAttribute('data-srcset', srcsets.join());
+   image.sizes = sizes.join();
+ }
+
+ /**
+  * Restaurant size attribute.
+  */
+ static sizeAttribute(media, slot) {
+   return (`${media} ${slot}`);
+ }
+
 
   /**
    * Map marker for a restaurant.

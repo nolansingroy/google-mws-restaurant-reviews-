@@ -13,11 +13,12 @@ const $ = gulpLoadPlugins();
 const del = require("del");
 var zlib = require('zlib');
 var  critical = require('critical');
+var responsive = require('gulp-responsive');
 
 
 gulp.task("clean", del.bind(null, ["dist"]));
 
-gulp.task('default', ['copy', 'browser-sync', 'css', 'js','critical','img'], function() {})
+gulp.task('default', ['copy', 'browser-sync', 'css', 'js','critical','images'], function() {})
 
 gulp.task('browser-sync', function() {
   browserSync.init({
@@ -50,6 +51,71 @@ gulp.task('critical', function () {
         width: 320,
         height: 480
     });
+});
+
+gulp.task('images', function () {
+    return gulp.src('img/*.{png,jpg}')
+        .pipe(responsive({
+            '*.png': [{ /* DO NOTHING */ }],
+            '*.jpg': [{ /* DO NOTHING */ },
+                {
+                    width: 280,
+                    rename: function (path) {
+                        path.dirname += "/scaled";
+                        path.basename += "_280";
+                        path.extname = ".jpg";
+                        return path;
+                    }
+                },
+                {
+                    width: 280,
+                    rename: function (path) {
+                        path.dirname += "/scaled";
+                        path.basename += "_280";
+                        path.extname = ".jpg";
+                        return path;
+                    }
+                },
+                {
+                    width: 335,
+                    rename: function (path) {
+                        path.dirname += "/scaled";
+                        path.basename += "_335";
+                        path.extname = ".jpg";
+                        return path;
+                    }
+                },
+                {
+                    width: 385,
+                    rename: function (path) {
+                        path.dirname += "/scaled";
+                        path.basename += "_385";
+                        path.extname = ".jpg";
+                        return path;
+                    }
+                },
+                {
+                    width: 432,
+                    rename: function (path) {
+                        path.dirname += "/scaled";
+                        path.basename += "_432";
+                        path.extname = ".jpg";
+                        return path;
+                    }
+                },
+                {
+                    width: 640,
+                    rename: function (path) {
+                        path.dirname += "/scaled";
+                        path.basename += "_640";
+                        path.extname = ".jpg";
+                        return path;
+                    }
+                }
+            ]
+        }))
+        .pipe(imagemin())
+        .pipe(gulp.dest('dist/img'));
 });
 
 gulp.task("css", () => {
