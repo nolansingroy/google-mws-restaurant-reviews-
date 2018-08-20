@@ -2,13 +2,15 @@
 <html lang="en-US">
 
 <head>
+  <meta chrset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <meta name="theme-color" content="#262932" chrset="utf-8">
+  <meta name="theme-color" content="#262932" />
   <meta name="Description" content="Main Restaruants Page">
-  <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
-  <link rel="stylesheet" href="css/styles.css">
   <link rel="manifest" href="manifest.json">
 
+  <link rel="alternate stylesheet" href="css/styles.css" onload="this.rel='stylesheet'">
+
+  <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
   <title>Restaurant Reviews</title>
 
 </head>
@@ -22,7 +24,7 @@
 
   <main id="maincontent" tabindex="-1">
     <section id="map-container">
-      <div id="map" role="application"></div>
+      <div id="map" role="application" style = "display: none"></div>
     </section>
     <section>
       <div class="filter-options">
@@ -34,23 +36,25 @@
         <select aria-label="Select the restaurant cuisine" id="cuisines-select" name="cuisines" onchange="updateRestaurants()">
           <option value="all">All Cuisines</option>
         </select>
+        <button onclick="openMap()" title="Restaurants Map" id="openMap">Restaurants Map</button>
       </div>
       <ul id="restaurants-list"></ul>
     </section>
   </main>
-<!-- JS Scripts-->
-<!-- Load the polyfill first. -->
-<!-- <script src="js/intersection-observer.js"></script> -->
 
-<!--Minified jsbundle-->
+  <!--Minified jsbundle-->
   <script type="application/javascript" charset="utf-8" src="js/all.js"></script>
 
-  <!-- <script type="application/javascript" charset="utf-8" src="js/idb.js"></script>
-  <script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>
-  <script type="application/javascript" charset="utf-8" src="js/main.js"></script> -->
-<!-- Google Maps-->
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC5_Noee-qKJ9CyY5D1eBA2DRMtLHPAiPQ&libraries=places&callback=initMap&id=mapframe"></script>
+  <!-- Google Maps-->
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC5_Noee-qKJ9CyY5D1eBA2DRMtLHPAiPQ&libraries=places&callback=initMap&id=mapframe">
+  </script>
+<!--TODO: create serviceWorker registration file
+      and Add the reference link to the file here
 
+      Register the service worker
+
+      <script type="application/javascript" charset="utf-8" src="js/swReg.js"></script>
+ -->
   <!--Service Worker-->
   <script>
     if ('serviceWorker in navigatior') {

@@ -9,6 +9,14 @@
   <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
   <!-- Main CSS file -->
   <link rel="stylesheet" href="css/styles.css" type="text/css">
+  <style>
+  html {
+    box-sizing: border-box;
+  }
+  *, *:before, *:after {
+    box-sizing: inherit;
+  }
+  </style>
 
   <title>Restaurant Info</title>
 </head>
@@ -32,24 +40,46 @@
   <!-- Beginning main -->
   <main id="maincontent" tabindex="-1">
     <!-- Beginning map -->
-    <section id="map-container">
+    <section id="map-container" style="display: none">
       <div id="map" role="application"></div>
     </section>
     <!-- End map -->
     <!-- Beginning restaurant -->
     <section id="restaurant-container">
       <h2 id="restaurant-name"></h2>
+      <button id="favorite-btn" onclick="window.toggleRestaurantFav();"></button>
+      <button id="mapbtn" onclick="window.showmap();">Show map</button>
+
       <img id="restaurant-img">
       <p id="restaurant-cuisine"></p>
       <p id="restaurant-address"></p>
       <table id="restaurant-hours"></table>
-    </section>
-    <!-- end restaurant -->
-    <!-- Beginning reviews -->
-    <section id="reviews-container">
-      <ul id="reviews-list"></ul>
-    </section>
-    <!-- End reviews -->
+      <section id="reviews-container">
+        <div>
+          <h2>
+            Add your restaurant review
+          </h2>
+        </div>
+        <form action="" id="add-review-form">
+          <label for="reviewerName">Reviewer name</label>
+          <input type="text" id="reviewerName" name="reviewerName" placeholder="Name" aria-label="Reviewer Name" required aria-required="true">
+            <div>
+                <label for="restaurantRating">Restaurant Rating</label>
+                <select id="restaurantRating" name="restaurantRating" aria-label="Restaurant Rating"  required aria-required="true">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5" selected>5</option>
+                </select>
+              </div>
+            <textarea name="reviewComment" id="reviewComment" aria-label="Review comment" placeholder="The restaurant was..."  required aria-required="true"></textarea>
+            <input type="button" onclick="addReview()" id="submitReview" value="Send Review">
+        </form>
+        <h2>Reviews</h2>
+        <ul id="reviews-list"></ul>
+
+      </section>  <!-- End reviews -->
   </main>
   <!-- End main -->
 
@@ -59,17 +89,6 @@
   </footer>
   <!-- End footer -->
 
-  <!-- Beginning scripts -->
-  <!-- <script type="application/javascript" charset="utf-8" src="js/restaurant_info.js"></script>
-  <!-- IDB Library -->
-  <!-- <script type="application/javascript" charset="utf-8" src="js/idb.js"></script>
-
-  <!-- Database helpers -->
-    <!-- <script type="text/javascript" src="js/dbhelper.js"></script> -->
-
-
-<!--Load polyfill first  lazy loading-->
-<!-- <script src="js/intersection-observer.js"></script> -->
 
 <!-- Minifyed javascript file -->
 <script type="application/javascript" charset="utf-8" src="js/restaurant_all.js"></script>

@@ -126,7 +126,7 @@ nav h1 a {
   margin: 0 20px;
   padding: 10px 0px 2px 0px;
 }
-.filter-options select {
+.filter-options select, #openMap {
   background-color: white;
   border: 1px solid #fff;
   font-family: Arial,sans-serif;
@@ -138,7 +138,7 @@ nav h1 a {
   width: 200px;
 }
 
-.filter-options select:focus {
+.filter-options select:focus, #openMap:focus {
   border: 3px solid #b26000;
 }
 
@@ -278,10 +278,14 @@ nav h1 a {
 #reviews-list {
   margin: 0;
   padding: 0;
+	width: 100%;
+}
+#reviews-container form {
+  width: 85%;
 }
 #reviews-list li {
   background-color: #fff;
-    border: 2px solid #f3f3f3;
+  border: 2px solid #f3f3f3;
   display: block;
   list-style-type: none;
   margin: 0 0 30px;
@@ -296,6 +300,17 @@ nav h1 a {
 #restaurant-hours td {
   color: #666;
 }
+/*Add review*/
+#add-review-form label {
+  min-width: 140px;
+  display: inline-block;
+  font-size: 16px;
+}
+#add-review-form textarea {
+  width: 100%;
+}
+
+
 
 @media only screen and (max-width: 800px) {
   #breadcrumb {
@@ -328,3 +343,5 @@ nav h1 a {
   }
 
 }
+
+/*TODO: media query for apple devices and nexus 5 5x and pixel*/

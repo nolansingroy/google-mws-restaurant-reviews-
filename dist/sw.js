@@ -9,11 +9,11 @@ var urlsToCache = [
   '/js/restaurant_all.js',
 ];
 
+// Installation
 self.addEventListener('install',function (event) {
-//installation steps
   event.waitUntil(
     caches.open(Cache_Name).then(function (cache) {
-      console.log('Opened cache');
+      console.log('Opened Cache-v');
       return cache.addAll(urlsToCache);
     })
   );

@@ -13,12 +13,12 @@ const $ = gulpLoadPlugins();
 const del = require("del");
 var zlib = require('zlib');
 var  critical = require('critical');
-var responsive = require('gulp-responsive');
+//var responsive = require('gulp-responsive');
 
 
 gulp.task("clean", del.bind(null, ["dist"]));
-
-gulp.task('build', ['copy', 'css', 'js', 'images'], function() {})
+//'images'
+gulp.task('build', ['copy', 'css', 'js'], function() {})
 gulp.task('serve', ['critical','browser-sync'], function() {})
 
 gulp.task('default', ['copy', 'css', 'js','critical','images','browser-sync'], function() {})
@@ -27,7 +27,9 @@ gulp.task('browser-sync', function() {
   browserSync.init({
     server: {
       baseDir: "./dist",
-      middleware: [compress()]
+      middleware: [compress()],
+      //httpModule: 'http2',
+      http:true
     }
   });
 });

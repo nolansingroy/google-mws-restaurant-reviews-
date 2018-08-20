@@ -10,30 +10,34 @@ class DBHelper {
     const port = 1337 // Change this to your server port
     return `http://localhost:${port}/restaurants`;
   }
+  static get REVIEW_URL() {
+    const port = 1337
+    return `http://localhost:${port}/reviews`;
+  }
 
   /**
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
 
-    function addRestaurants(data){
+    function addRestaurants(data) {
       const restaurants = data;
       DBHelper.addToDatabase(restaurants);
       return restaurants;
     }
 
-    function requestError(e, part){
+    function requestError(e, part) {
       const error = (`There was a failed request with error ${part}`);
       callback(error, null);
     }
 
     DBHelper.getRestaurantsFromCache().then(restaurants => {
-      if(restaurants.length) {
+      if (restaurants.length) {
         return Promise.resolve(restaurants);
         console.log('restaurants.length called');
       } else {
         return fetch(DBHelper.DATABASE_URL).then(response => response.json())
-        .then(addRestaurants).catch(e => requestError(e, 'json'));
+          .then(addRestaurants).catch(e => requestError(e, 'json'));
       }
     }).then(restaurants => {
       callback(null, restaurants);
@@ -66,7 +70,7 @@ class DBHelper {
    */
 
   static fetchRestaurantById(id, callback) {
-   DBHelper.fetchRestaurants((error, restaurants) => {
+    DBHelper.fetchRestaurants((error, restaurants) => {
       if (error) {
         callback(error, null);
       } else {
@@ -74,7 +78,7 @@ class DBHelper {
         if (restaurant) {
           callback(null, restaurant);
         } else {
-          callback('Restaurant does not exist', null);
+          callback('Restaurant not available in data', null);
         }
       }
     });
@@ -182,44 +186,41 @@ class DBHelper {
   static imageUrlForRestaurant(restaurant) {
     return (`/img/${restaurant.photograph}.jpg`);
   }
-  //Its more responsive to use the srcset atrribute
- //  static imageSrcSetForRestaurant(restaurant) {
- //    return (`/img/1x/${restaurant.photograph}.webp 1x, /img/2x/${restaurant.photograph}.webp 2x, /img/${restaurant.photograph}.webp 3x`);
- // }
 
- /**
-  * Restaurant srcset URL.
-  */
- static srcsetUrlForRestaurant(restaurant, suffix, size) {
-   return (`/img/scaled/${restaurant.id}${suffix} ${size}`);
- }
 
- /**
-  * Restaurant srcset.
-  */
- static generateSrcset(restaurant, viewportMap, image) {
-   let srcsets = [];
-   let sizes = [];
+  /**
+   * Restaurant srcset URL.
+   */
+  static srcsetUrlForRestaurant(restaurant, suffix, size) {
+    return (`/img/scaled/${restaurant.id}${suffix} ${size}`);
+  }
 
-   for (const viewport of viewportMap) {
-     const size = DBHelper.sizeAttribute(viewport.media, viewport.slot);
-     const srcset = DBHelper.srcsetUrlForRestaurant(restaurant, viewport.suffix, viewport.size);
-     srcsets.push(srcset)
-     sizes.push(size)
-   }
+  /**
+   * Restaurant srcset.
+   */
+  static generateSrcset(restaurant, viewportMap, image) {
+    let srcsets = [];
+    let sizes = [];
 
-   image.alt = restaurant.name;
-   image.setAttribute('data-src', DBHelper.imageUrlForRestaurant(restaurant));
-   image.setAttribute('data-srcset', srcsets.join());
-   image.sizes = sizes.join();
- }
+    for (const viewport of viewportMap) {
+      const size = DBHelper.sizeAttribute(viewport.media, viewport.slot);
+      const srcset = DBHelper.srcsetUrlForRestaurant(restaurant, viewport.suffix, viewport.size);
+      srcsets.push(srcset)
+      sizes.push(size)
+    }
 
- /**
-  * Restaurant size attribute.
-  */
- static sizeAttribute(media, slot) {
-   return (`${media} ${slot}`);
- }
+    image.alt = restaurant.name;
+    image.setAttribute('data-src', DBHelper.imageUrlForRestaurant(restaurant));
+    image.setAttribute('data-srcset', srcsets.join());
+    image.sizes = sizes.join();
+  }
+
+  /**
+   * Restaurant size attribute.
+   */
+  static sizeAttribute(media, slot) {
+    return (`${media} ${slot}`);
+  }
 
 
   /**
@@ -231,8 +232,8 @@ class DBHelper {
       title: restaurant.name,
       url: DBHelper.urlForRestaurant(restaurant),
       map: map,
-      animation: google.maps.Animation.DROP}
-    );
+      animation: google.maps.Animation.DROP
+    });
     return marker;
   }
 
@@ -245,12 +246,37 @@ class DBHelper {
       return Promise.resolve();
     }
 
-    return idb.open('restaurant', 1, upgradeDb => {
-      var store = upgradeDb.createObjectStore('restaurants', {
-        keyPath: 'id'
-      });
+    return idb.open('restaurants', 1, upgradeDB => {
+      //store object within idb
+      switch (upgradeDB.oldVersion) {
+        case 0:
+        upgradeDB.createObjectStore('restaurants', {keyPath: 'id'});
+        case 1:
+          {
+            //review store object
+            //@param: 'reviews'
+            const revStore = upgradeDB.createObjectStore('reviews', {
+              keyPath: 'id'
+            });
+            revStore.createIndex("restaurant_id", "restaurant_id");
+          }
+        // case 2:
+        //   //TODO: write out pending methods
+        //   upgradeDB.createObjectStore('pending', {
+        //     keypath: 'id',
+        //     autoIncrement: true
+        //   });
+        case 2:
+          {
+            //idb objectstore to hold offline reviews
+            //@param: 'reviewsOffline'
+            const revStoreOffline = upgradeDB.createObjectStore('reviewsOffline', {
+              keyPath: 'id'
+            });
+          }
+      } //eof case switch
     });
-  }
+  };
 
   static addToDatabase(restaurantList) {
     var dbPromise = this.openDatabase();
@@ -260,18 +286,159 @@ class DBHelper {
       const tx = db.transaction('restaurants', 'readwrite');
       const restaurantStore = tx.objectStore('restaurants');
       restaurantList.forEach(restaurant => {
+
+  //      console.log(`restaurant: ${restaurant}`);
+
         restaurantStore.put(restaurant);
       });
     });
     return tx.complete;
-  }
+  };
 
+  //new addReviewsToDatabase fn
+  //@param: 'reviews'
+  static addReviewsToDatabase(reviews) {
+    var dbPromise = this.openDatabase();
+    return dbPromise.then(db => {
+      if (!db) return;
+      const tx = db.transaction('reviews', 'readwrite');
+      const revStore = tx.objectStore('reviews');
+      reviews.forEach(review => {
+        revStore.put(review);
+        //console.log(`revStore: ${review.json()}`);
+      });
+    });
+    return tx.complete;
+  };
+
+  //new addReviewsOfflineToDatabase
+  //@param: 'reviews' || objectstore
+  static addReviewsOfflineToDatabase(review) {
+    var dbPromise = this.openDatabase();
+    return dbPromise.then(db => {
+      if (!db) return
+      //console.log('no idb named reviews open');
+      const tx = db.transaction('reviewsOffline', 'readwrite');
+      const revStoreOffline = tx.objectStore('reviewsOffline');
+      revStoreOffline.put(review);
+  //    console.log('add reviews offline to database' + review);
+    });
+    return tx.complete;
+  };
+
+  /**
+   * "D"in crud fnuctionality
+   * Delete entries from restaurant idb database
+   * @param: (id)
+   */
+  static deleteRestaurant(id) {
+    var dbPromise = this.openDatabase();
+    return dbPromise.then(db => {
+    //   console.log(`The restaurant ID: ${id}`);
+      if (!db) return;
+      const tx = db.transaction('restaurants', 'readwrite');
+      const restaurantStore = tx.objectStore('restaurants').delete(id);
+    });
+    return tx.complete;
+  };
+
+  /**
+   * Delete entries from offline reviews.
+   */
+  static deleteOffRevDatabase(id) {
+    var dbPromise = this.openDatabase();
+    return dbPromise.then(db => {
+      //console.log(`The offDB ID: ${id}`);
+      if (!db) return;
+      const tx = db.transaction('reviewsOffline', 'readwrite');
+      const revStore = tx.objectStore('reviewsOffline').delete(id);
+    });
+    return tx.complete;
+  };
+
+  /**
+   * Get Reviews from Cache
+   */
   static getRestaurantsFromCache() {
     return DBHelper.openDatabase().then(db => {
       if (!db) return;
       return db.transaction('restaurants').objectStore('restaurants').getAll();
-      console.log('get restarurants from cache');
+    //  console.log('get restarurants from cache');
     });
-  }
+  };
+  /**
+   * Get Reviews from Cache
+   */
+  static getReviewsFromCache() {
+    return DBHelper.openDatabase().then(db => {
+      if (!db) return;
+      return db.transaction('reviews').objectStore('reviews').getAll();
+    });
+  };
+  /**
+   *  Get offline reviews from cache
+   */
+  static getOfflineReviewsFromCache() {
+    return DBHelper.openDatabase().then(db => {
+      if (!db) return;
+      return db.transaction('reviewsOffline').objectStore('reviewsOffline').getAll();
+    });
+  };
+
+
+  /**
+   * Get all reviews for a restaurant by id
+   *@param: (id, callback)
+   * fn: addReviewsToDatabase() & scoped
+   * this.getReviewsFromCache()
+   */
+  static getReviewsByID(id, callback) {
+    fetch(DBHelper.REVIEW_URL + '?restaurant_id=' + id).then((response) => {
+      return response.json();
+    }).then(reviews => {
+      callback(null, reviews);
+      DBHelper.addReviewsToDatabase(reviews);
+    }).catch(error => {
+      let reviews = this.getReviewsFromCache().then((reviews) => {
+        return Promise.resolve(reviews);
+      }).then(reviews => {
+        callback(null, reviews);
+      }).catch(error => {
+        callback(error, null);
+      })
+
+    })
+  };
+  /**
+   * Sets the is_favorite status of a Restaurant
+   */
+  static setRestFavoriteStat(status, restaurant_id) {
+    fetch(DBHelper.DATABASE_URL + `/${restaurant_id}/?is_favorite=${status}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(response => {
+    //  console.log('Changed favorite status:', response);
+      return response.json();
+    }).catch(error => {
+      console.log(error);
+    })
+  };
+
+  /**
+   * Saves a review to the server
+   */
+  static postReview(reviewData) {
+    fetch(DBHelper.REVIEW_URL, {
+      body: JSON.stringify(reviewData),
+      method: 'POST',
+    }).then(response => {
+    //  console.log('Review post to server response:', response);
+      //console.log('response.json():  '+response.json());
+    }).catch(error => {
+      console.log(error);
+    })
+  };
 
 }

@@ -4,38 +4,38 @@ var map;
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js');
 }
-
 /**
  * Initialize Google map, called from HTML.
  */
 window.initMap = () => {
-  fetchRestaurantFromURL((error, restaurant) => {
-    if (error) { // Got an error!
+  const id = getParameterByName('id');
+  DBHelper.fetchRestaurantById(id, (error, restaurant) => {
+    self.restaurant = restaurant;
+    if (!restaurant) {
       console.error(error);
-    } else {
-      self.map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 16,
-        center: restaurant.latlng,
-        scrollwheel: false
-      });
-      fillBreadcrumb();
-      DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
+      return;
     }
+    self.map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 16,
+      center: self.restaurant.latlng,
+      scrollwheel: false
+    });
+    DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
   });
 }
 
 /**
  * Get current restaurant from page URL.
  */
-const fetchRestaurantFromURL = (callback) => {
+const fetchRestaurantFromURL = () => {
   if (self.restaurant) { // restaurant already fetched!
-    callback(null, self.restaurant)
+    //  callback(null, self.restaurant)
     return;
   }
   const id = getParameterByName('id');
   if (!id) { // no id found in URL
     error = 'No restaurant id in URL'
-    callback(error, null);
+    //    callback(error, null);
   } else {
     DBHelper.fetchRestaurantById(id, (error, restaurant) => {
       self.restaurant = restaurant;
@@ -43,8 +43,11 @@ const fetchRestaurantFromURL = (callback) => {
         console.error(error);
         return;
       }
+      fillBreadcrumb();
       fillRestaurantHTML();
-      callback(null, restaurant)
+      //callback(null, restaurant)
+      getReviewsByID(restaurant);
+
     });
   }
 }
@@ -56,15 +59,45 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
 
+  const favBTN = document.getElementById('favorite-btn');
+  let favStatus = self.restaurant.is_favorite;
+  //console.log(`The Favorite status:${favStatus}`);
+  favBTN.innerHTML = (favStatus === 'true' ? 'Favorite' : 'Not Favorite');
+
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;
 
   const image = document.getElementById('restaurant-img');
   image.className = 'restaurant-img'
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  image.alt = 'Photo of ' + restaurant.name;
-  image.srcset = DBHelper.imageUrlForRestaurant(restaurant);
-  image.sizes = "(max-width:800px) 100vw, 50vx";
+  const viewportMap = [{
+      media: '(max-width: 320px)',
+      suffix: '_280.jpg',
+      size: '280w',
+      slot: '280px'
+    },
+    {
+      media: '(min-width: 375px)',
+      suffix: '_385.jpg',
+      size: '385w',
+      slot: '385px'
+    },
+    {
+      media: '((min-width: 425px) and (max-width: 767px))',
+      suffix: '_640.jpg',
+      size: '640w',
+      slot: ''
+    },
+    {
+      media: '(min-width: 425px)',
+      suffix: '_640.jpg',
+      size: '640w',
+      slot: '432px'
+    }
+  ];
+
+  DBHelper.generateSrcset(restaurant, viewportMap, image);
+
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
@@ -74,7 +107,7 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
     fillRestaurantHoursHTML();
   }
   // fill reviews
-  fillReviewsHTML();
+//fillReviewsHTML();
 }
 
 /**
@@ -82,6 +115,12 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
  */
 const fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => {
   const hours = document.getElementById('restaurant-hours');
+
+  const caption = document.createElement('caption');
+  caption.innerHTML = `${self.restaurant.name}'s Hours of Operation`;
+  hours.appendChild(caption)
+
+
   for (let key in operatingHours) {
     const row = document.createElement('tr');
 
@@ -92,32 +131,41 @@ const fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hour
     const time = document.createElement('td');
     time.innerHTML = operatingHours[key];
     row.appendChild(time);
-
     hours.appendChild(row);
   }
+
+
 }
+/**
+ * Get all the reviews of a given restaurant
+ */
+const getReviewsByID = (restaurant = self.restaurant) => {
+  DBHelper.getReviewsByID(restaurant.id, (err, reviews) => {
+    console.log(`Reviews for restaurant ${restaurant.id} `, reviews);
+    fillReviewsHTML(reviews)
+  })
+}
+
 
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-const fillReviewsHTML = (reviews = self.restaurant.reviews) => {
-  const container = document.getElementById('reviews-container');
-  const title = document.createElement('h2');
-  title.innerHTML = 'Reviews';
-  container.appendChild(title);
+ const fillReviewsHTML = (reviews = getReviewsByID(self.restaurant))=>{
+   console.log(reviews);
+   const container = document.getElementById('reviews-container');
 
-  if (!reviews) {
-    const noReviews = document.createElement('p');
-    noReviews.innerHTML = 'No reviews yet!';
-    container.appendChild(noReviews);
-    return;
-  }
-  const ul = document.getElementById('reviews-list');
-  reviews.forEach(review => {
-    ul.appendChild(createReviewHTML(review));
-  });
-  container.appendChild(ul);
-}
+   if (!reviews) {
+     const noReviews = document.createElement('p');
+     noReviews.innerHTML = 'No posted reviews!';
+     container.appendChild(noReviews);
+     return;
+   }
+   const ul = document.getElementById('reviews-list');
+   reviews.forEach(review => {
+     ul.appendChild(createReviewHTML(review));
+   });
+   container.appendChild(ul);
+ }
 
 /**
  * Create review HTML and add it to the webpage.
@@ -125,12 +173,15 @@ const fillReviewsHTML = (reviews = self.restaurant.reviews) => {
 const createReviewHTML = (review) => {
   const li = document.createElement('li');
   const name = document.createElement('p');
-  name.innerHTML = review.name;
+  name.innerHTML = `Reviewer name: ${review.name}`;
+
+  li.setAttribute('role', 'listitem');
   li.appendChild(name);
 
-  const date = document.createElement('p');
-  date.innerHTML = review.date;
-  li.appendChild(date);
+
+    const date = document.createElement('p');
+    date.innerHTML = dateTimeFromTimestamp(review.updatedAt);
+    li.appendChild(date);
 
   const rating = document.createElement('p');
   rating.innerHTML = `Rating: ${review.rating}`;
@@ -141,6 +192,11 @@ const createReviewHTML = (review) => {
   li.appendChild(comments);
 
   return li;
+}
+//Convert TimeStamp format
+const dateTimeFromTimestamp = (timeStamp) => {
+  let dT = new Date(timeStamp);
+  return dT.getDate() + '-' + (dT.getMonth() + 1) + '-' + dT.getFullYear() + ' ' + dT.getHours() + ':' + dT.getMinutes();
 }
 
 /**
@@ -167,4 +223,81 @@ const getParameterByName = (name, url) => {
   if (!results[2])
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+/**
+ * Add a new review from form
+ */
+function addReview() {
+  const form = document.getElementById('add-review-form');
+  let reviewData = {
+    restaurant_id: self.restaurant.id,
+    name: document.getElementById('reviewerName').value,
+    rating: document.getElementById('restaurantRating').value,
+    comments: document.getElementById('reviewComment').value
+  };
+  form.reset();
+
+  if(navigator.onLine){
+    DBHelper.postReview(reviewData);
+    document.getElementById('reviews-list').innerHTML = '';
+    getReviewsByID(restaurant = self.restaurant);
+  } else {
+    reviewData.createdAt = Date.now();
+    reviewData.updatedAt = reviewData.createdAt;
+    reviewData.id = reviewData.createdAt;
+    DBHelper.addReviewsOfflineToDatabase(reviewData);
+    let review = [reviewData];
+    fillReviewsHTML(review);
+  }
+  console.log(reviewData);
+}
+
+/**
+ * When we aget online, get reviews from IDB and POST them
+ * https://medium.com/@MateMarschalko/online-and-offline-events-with-javascript-d424bec8f43
+ */
+window.addEventListener("online", function(event){
+  DBHelper.getOfflineReviewsFromCache().then(offlineReviews => {
+    if (!offlineReviews || offlineReviews.length == 0 ) { return; }
+    offlineReviews.forEach(review => {
+      DBHelper.postReview(review);
+    //  console.log(review);
+      //Delete from IDB
+      DBHelper.deleteOffRevDatabase(review.id);
+    });
+  }).catch(error => {
+    console.log(error);
+  })
+});
+
+ /**
+ * Toggle restaurant favorite
+ */
+window.toggleRestaurantFav = () =>{
+  let favBTN = document.getElementById("favorite-btn").innerHTML;
+  if (favBTN == 'Not Favorite') {
+    document.getElementById("favorite-btn").innerHTML = "Favorite";
+    DBHelper.setRestFavoriteStat(true, self.restaurant.id);
+  }	else {
+    document.getElementById("favorite-btn").innerHTML = "Not Favorite";
+    DBHelper.setRestFavoriteStat(false, self.restaurant.id);
+  }
+}
+
+//showmap
+window.showmap = () => {
+  const bread = document.getElementById('breadcrumb');
+  const rest = document.getElementById('restaurant-container');
+  const rev= document.getElementById('reviews-container');
+  const map = document.getElementById('map-container');
+  bread.style.width = 'calc(50% - 40px)';
+  rest.style.width = 'calc(50% - 20px)';
+  rest.style.marginRight = '0';
+  rest.style.marginLeft = '0';
+  rev.style.width = 'calc(50% - 20px)';
+  rev.style.marginRight = '0';
+  rev.style.marginLeft = '0';
+  map.style.display = 'block';
+  initMap();
 }

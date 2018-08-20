@@ -1,8 +1,9 @@
 let restaurants,
   neighborhoods,
-  cuisines
-var map
-var markers = []
+  cuisines;
+var map;
+var markers = [];
+
 
 
 /**
@@ -18,14 +19,27 @@ document.addEventListener('DOMContentLoaded', (event) => {
  */
 const fetchNeighborhoods = () => {
   DBHelper.fetchNeighborhoods((error, neighborhoods) => {
-    if (error) { // Got an error
+    if (error) {
       console.error(error);
     } else {
       self.neighborhoods = neighborhoods;
-      fillNeighborhoodsHTML();
+      fillNeighborhoodsHTML(self.neighborhoods);
     }
   });
-}
+};
+
+//potiential performance increase
+// fn openMap() : start with hidden map
+const openMap = () => {
+  let mapDisplay = document.getElementById('map').style.display;
+  if (mapDisplay === 'none') {
+    mapDisplay = 'block'
+    window.initMap();
+  } else {
+    mapDisplay = 'none'
+  }
+  document.getElementById('map').style.display = mapDisplay;
+};
 
 /**
  * Set neighborhoods HTML.
@@ -38,7 +52,7 @@ const fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
     option.value = neighborhood;
     select.append(option);
   });
-}
+};
 
 /**
  * Fetch all cuisines and set their HTML.
@@ -49,10 +63,10 @@ const fetchCuisines = () => {
       console.error(error);
     } else {
       self.cuisines = cuisines;
-      fillCuisinesHTML();
+      fillCuisinesHTML(self.cuisines);
     }
   });
-}
+};
 
 /**
  * Set cuisines HTML.
@@ -66,10 +80,12 @@ const fillCuisinesHTML = (cuisines = self.cuisines) => {
     option.value = cuisine;
     select.append(option);
   });
-}
+};
 
 /**
  * Initialize Google map, called from HTML.
+ * reference this initMap() in hidden map fn
+ * above
  */
 window.initMap = () => {
   let loc = {
@@ -82,7 +98,7 @@ window.initMap = () => {
     scrollwheel: false
   });
   updateRestaurants();
-}
+};
 
 /**
  * Update page and map for current restaurants.
@@ -105,7 +121,7 @@ const updateRestaurants = () => {
       fillRestaurantsHTML();
     }
   })
-}
+};
 
 /**
  * Clear current restaurants, their HTML and remove their map markers.
@@ -120,7 +136,7 @@ const resetRestaurants = (restaurants) => {
   self.markers.forEach(m => m.setMap(null));
   self.markers = [];
   self.restaurants = restaurants;
-}
+};
 
 /**
  * Create all restaurants HTML and add them to the webpage.
@@ -143,7 +159,7 @@ const fillRestaurantsHTML = (restaurants = self.restaurants) => {
     ul.append(createRestaurantHTML(restaurant,lazyImageObserver));
   });
   addMarkersToMap();
-}
+};
 
 /**
  * Create restaurant HTML.
@@ -153,15 +169,6 @@ const createRestaurantHTML = (restaurant,observer) => {
 
   const image = document.createElement('img');
   image.className = 'restaurant-img';
-
-
-  // image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  // image.setAttribute('data-src', DBHelper.imageUrlForRestaurant(restaurant));
-  //
-  // image.srcset = DBHelper.imageSrcSetForRestaurant(restaurant);
-  // image.setAttribute('data-srcset', DBHelper.imageSrcSetForRestaurant(restaurant));
-  // image.sizes = "270px"
-  // image.alt = 'Photo of ' + restaurant.name;
 
 const viewportMap = [{
     media: '(max-width: 320px)',
@@ -223,7 +230,7 @@ li.append(image);
   li.append(more)
 
   return li
-}
+};
 
 /**
  * Add markers for current restaurants to the map.
@@ -237,4 +244,4 @@ const addMarkersToMap = (restaurants = self.restaurants) => {
     });
     self.markers.push(marker);
   });
-}
+};

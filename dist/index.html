@@ -2,19 +2,20 @@
 <html lang="en-US">
 
 <head>
+  <meta chrset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <meta name="theme-color" content="#262932" chrset="utf-8">
+  <meta name="theme-color" content="#262932">
   <meta name="Description" content="Main Restaruants Page">
+  <link rel="manifest" href="manifest.json">
+
+  <link rel="alternate stylesheet" href="css/styles.css" onload="this.rel='stylesheet'">
+
   <style>
-    @charset "utf-8";body{font-family:Arial,Helvetica,sans-serif;font-size:10pt;color:#333;line-height:1.5}body{background-color:#fdfdfd;margin:0;position:relative}a{color:orange;text-decoration:none}h1,h2{font-family:Arial,Helvetica,sans-serif;margin:0 0 20px}header,nav,section{display:block}#maincontent{background-color:#fdfdfd;min-height:100%}#map,nav{width:100%}nav{text-align:center;background-color:#252831}nav h1{margin:auto}nav h1 a{color:#fff;font-size:calc(12px + 1vw);font-weight:200;letter-spacing:10px;text-transform:uppercase}#map{height:400px;background-color:#ccc}.filter-options{width:100%;background-color:#3397db;-webkit-box-align:center;-ms-flex-align:center;align-items:center}.filter-options h2{color:#fff;font-size:1.6rem;font-weight:400;line-height:1;margin:0 20px;padding:10px 0 2px}@media only screen and (max-width:800px){#maincontent{width:100%}}
+    @charset "utf-8";body{font-family:Arial,Helvetica,sans-serif;font-size:10pt;color:#333;line-height:1.5}body{background-color:#fdfdfd;margin:0;position:relative}ul{font-family:Arial,Helvetica,sans-serif;font-size:10pt;color:#333}a{color:orange;text-decoration:none}h1,h2{font-family:Arial,Helvetica,sans-serif;margin:0 0 20px}footer,header,nav,section{display:block}#maincontent{background-color:#fdfdfd;min-height:100%}#footer{background-color:#282828;color:#aaa;font-size:8pt;letter-spacing:1px;padding:25px 0;text-align:center;text-transform:uppercase}#map,nav{width:100%}nav{text-align:center;background-color:#252831}nav h1{margin:auto}nav h1 a{color:#fff;font-size:calc(12px + 1vw);font-weight:200;letter-spacing:10px;text-transform:uppercase}#map{height:400px;background-color:#ccc}.filter-options{width:100%;background-color:#3397db;-webkit-box-align:center;-ms-flex-align:center;align-items:center}.filter-options h2{color:#fff;font-size:1.6rem;font-weight:400;line-height:1;margin:0 20px;padding:10px 0 2px}#openMap,.filter-options select{background-color:#fff;border:1px solid #fff;font-family:Arial,sans-serif;font-size:11pt;height:35px;letter-spacing:0;margin:10px;padding:0 10px;width:200px}#restaurants-list{display:grid;grid-template-columns:repeat(auto-fit,340px);-webkit-box-pack:space-evenly;-ms-flex-pack:space-evenly;justify-content:space-evenly;background-color:#f3f3f3;list-style:outside none none;margin:0;padding:30px 0 60px;text-align:center;width:100%}@media only screen and (max-width:800px){#maincontent{width:100%}}
   </style>
   <link rel="preload" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css"></noscript>
-  <link rel="preload" href="css/styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="css/styles.css"></noscript>
   <script>!function(n){"use strict";n.loadCSS||(n.loadCSS=function(){});var o=loadCSS.relpreload={};if(o.support=function(){var e;try{e=n.document.createElement("link").relList.supports("preload")}catch(t){e=!1}return function(){return e}}(),o.bindMediaToggle=function(t){var e=t.media||"all";function a(){t.media=e}t.addEventListener?t.addEventListener("load",a):t.attachEvent&&t.attachEvent("onload",a),setTimeout(function(){t.rel="stylesheet",t.media="only x"}),setTimeout(a,3e3)},o.poly=function(){if(!o.support())for(var t=n.document.getElementsByTagName("link"),e=0;e<t.length;e++){var a=t[e];"preload"!==a.rel||"style"!==a.getAttribute("as")||a.getAttribute("data-loadcss")||(a.setAttribute("data-loadcss",!0),o.bindMediaToggle(a))}},!o.support()){o.poly();var t=n.setInterval(o.poly,500);n.addEventListener?n.addEventListener("load",function(){o.poly(),n.clearInterval(t)}):n.attachEvent&&n.attachEvent("onload",function(){o.poly(),n.clearInterval(t)})}"undefined"!=typeof exports?exports.loadCSS=loadCSS:n.loadCSS=loadCSS}("undefined"!=typeof global?global:this);</script>
-  <link rel="manifest" href="manifest.json">
-
   <title>Restaurant Reviews</title>
 
 </head>
@@ -28,7 +29,7 @@
 
   <main id="maincontent" tabindex="-1">
     <section id="map-container">
-      <div id="map" role="application"></div>
+      <div id="map" role="application" style="display: none"></div>
     </section>
     <section>
       <div class="filter-options">
@@ -40,23 +41,25 @@
         <select aria-label="Select the restaurant cuisine" id="cuisines-select" name="cuisines" onchange="updateRestaurants()">
           <option value="all">All Cuisines</option>
         </select>
+        <button onclick="openMap()" title="Restaurants Map" id="openMap">Restaurants Map</button>
       </div>
       <ul id="restaurants-list"></ul>
     </section>
   </main>
-<!-- JS Scripts-->
-<!-- Load the polyfill first. -->
-<!-- <script src="js/intersection-observer.js"></script> -->
 
-<!--Minified jsbundle-->
+  <!--Minified jsbundle-->
   <script type="application/javascript" charset="utf-8" src="js/all.js"></script>
 
-  <!-- <script type="application/javascript" charset="utf-8" src="js/idb.js"></script>
-  <script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>
-  <script type="application/javascript" charset="utf-8" src="js/main.js"></script> -->
-<!-- Google Maps-->
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC5_Noee-qKJ9CyY5D1eBA2DRMtLHPAiPQ&libraries=places&callback=initMap&id=mapframe"></script>
+  <!-- Google Maps-->
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC5_Noee-qKJ9CyY5D1eBA2DRMtLHPAiPQ&libraries=places&callback=initMap&id=mapframe">
+  </script>
+<!--TODO: create serviceWorker registration file
+      and Add the reference link to the file here
 
+      Register the service worker
+
+      <script type="application/javascript" charset="utf-8" src="js/swReg.js"></script>
+ -->
   <!--Service Worker-->
   <script>
     if ('serviceWorker in navigatior') {
