@@ -243,6 +243,8 @@ function addReview() {
     document.getElementById('reviews-list').innerHTML = '';
     getReviewsByID(restaurant = self.restaurant);
   } else {
+    //lets save this data offline to be posted
+    //the next time we connect
     reviewData.createdAt = Date.now();
     reviewData.updatedAt = reviewData.createdAt;
     reviewData.id = reviewData.createdAt;
@@ -254,7 +256,7 @@ function addReview() {
 }
 
 /**
- * When we aget online, get reviews from IDB and POST them
+ * When we get online, get reviews from IDB and POST them
  * https://medium.com/@MateMarschalko/online-and-offline-events-with-javascript-d424bec8f43
  */
 window.addEventListener("online", function(event){
