@@ -13,12 +13,12 @@ const $ = gulpLoadPlugins();
 const del = require("del");
 var zlib = require('zlib');
 var  critical = require('critical');
-//var responsive = require('gulp-responsive');
+var responsive = require('gulp-responsive');
 
 
 gulp.task("clean", del.bind(null, ["dist"]));
 //'images'
-gulp.task('build', ['copy', 'css', 'js'], function() {})
+gulp.task('build', ['copy','images', 'css', 'js'], function() {})
 gulp.task('serve', ['critical','browser-sync'], function() {})
 
 gulp.task('default', ['copy', 'css', 'js','critical','images','browser-sync'], function() {})

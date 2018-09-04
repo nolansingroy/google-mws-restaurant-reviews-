@@ -27,25 +27,27 @@ window.initMap = () => {
 /**
  * Get current restaurant from page URL.
  */
-const fetchRestaurantFromURL = () => {
-  if (self.restaurant) { // restaurant already fetched!
-    //  callback(null, self.restaurant)
+const fetchRestaurantFromURL = (callback) => {
+  if (self.restaurant) {
+    // restaurant already fetched!
+   callback(null, self.restaurant)
     return;
   }
   const id = getParameterByName('id');
   if (!id) { // no id found in URL
     error = 'No restaurant id in URL'
-    //    callback(error, null);
+      callback(error, null);
   } else {
     DBHelper.fetchRestaurantById(id, (error, restaurant) => {
       self.restaurant = restaurant;
       if (!restaurant) {
+        console.log('no restataurnt fillRest callback getReviewsByID');
         console.error(error);
         return;
       }
-      fillBreadcrumb();
-      fillRestaurantHTML();
-      //callback(null, restaurant)
+      fillBreadcrumb(restaurant);
+      fillRestaurantHTML(restaurant);
+      callback(null, restaurant)
       getReviewsByID(restaurant);
 
     });
@@ -58,6 +60,7 @@ const fetchRestaurantFromURL = () => {
 const fillRestaurantHTML = (restaurant = self.restaurant) => {
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
+  console.log(name);
 
   const favBTN = document.getElementById('favorite-btn');
   let favStatus = self.restaurant.is_favorite;
@@ -66,10 +69,12 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;
+  console.log('address: ' + address);
 
   const image = document.getElementById('restaurant-img');
   image.className = 'restaurant-img'
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
+
   const viewportMap = [{
       media: '(max-width: 320px)',
       suffix: '_280.jpg',
@@ -98,7 +103,6 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   DBHelper.generateSrcset(restaurant, viewportMap, image);
 
-
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
 
@@ -107,7 +111,7 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
     fillRestaurantHoursHTML();
   }
   // fill reviews
-//fillReviewsHTML();
+fillReviewsHTML();
 }
 
 /**
@@ -132,6 +136,7 @@ const fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hour
     time.innerHTML = operatingHours[key];
     row.appendChild(time);
     hours.appendChild(row);
+    console.log('----key in operatingHours!---------');
   }
 
 
@@ -141,7 +146,7 @@ const fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hour
  */
 const getReviewsByID = (restaurant = self.restaurant) => {
   DBHelper.getReviewsByID(restaurant.id, (err, reviews) => {
-    console.log(`Reviews for restaurant ${restaurant.id} `, reviews);
+    //console.log(`Reviews for restaurant ${restaurant.id} `, reviews);
     fillReviewsHTML(reviews)
   })
 }
@@ -151,7 +156,7 @@ const getReviewsByID = (restaurant = self.restaurant) => {
  * Create all reviews HTML and add them to the webpage.
  */
  const fillReviewsHTML = (reviews = getReviewsByID(self.restaurant))=>{
-   console.log(reviews);
+  // console.log(reviews);
    const container = document.getElementById('reviews-container');
 
    if (!reviews) {
@@ -207,6 +212,7 @@ const fillBreadcrumb = (restaurant = self.restaurant) => {
   const li = document.createElement('li');
   li.innerHTML = restaurant.name;
   breadcrumb.appendChild(li);
+  //console.log('fillBreadcrumb fn called!!!!');
 }
 
 /**
@@ -250,7 +256,7 @@ function addReview() {
     reviewData.id = reviewData.createdAt;
     DBHelper.addReviewsOfflineToDatabase(reviewData);
     let review = [reviewData];
-    fillReviewsHTML(review);
+    fillReviewsHTML(review);//works
   }
   console.log(reviewData);
 }
@@ -260,9 +266,9 @@ function addReview() {
  * https://medium.com/@MateMarschalko/online-and-offline-events-with-javascript-d424bec8f43
  */
 window.addEventListener("online", function(event){
-  DBHelper.getOfflineReviewsFromCache().then(offlineReviews => {
-    if (!offlineReviews || offlineReviews.length == 0 ) { return; }
-    offlineReviews.forEach(review => {
+  DBHelper.getOfflineReviewsFromCache().then(reviewsOffline => {
+    if (!reviewsOffline || reviewsOffline.length == 0 ) { return; }
+    reviewsOffline.forEach(review => {
       DBHelper.postReview(review);
     //  console.log(review);
       //Delete from IDB
@@ -286,6 +292,19 @@ window.toggleRestaurantFav = () =>{
     DBHelper.setRestFavoriteStat(false, self.restaurant.id);
   }
 }
+
+/**
+ * Initialise map after the page has loaded
+*/
+
+ window.onload = () =>{
+   const map = document.getElementById('map-container');
+   map.style.display = 'block';
+   initMap();
+   fillBreadcrumb(restaurant);
+   fillRestaurantHTML(restaurant);
+   getReviewsByID(restaurant);
+ };
 
 //showmap
 window.showmap = () => {
