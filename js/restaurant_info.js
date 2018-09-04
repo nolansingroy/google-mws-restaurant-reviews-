@@ -4,10 +4,18 @@ var map;
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js');
 }
+
+document.addEventListener('DOMContentLoaded', (event) => {
+  //initMap();
+  DBHelper.postReview();
+  console.log('domcentent load event ');
+
+});
 /**
  * Initialize Google map, called from HTML.
  */
 window.initMap = () => {
+  console.log('initmap called');
   const id = getParameterByName('id');
   DBHelper.fetchRestaurantById(id, (error, restaurant) => {
     self.restaurant = restaurant;
@@ -21,8 +29,14 @@ window.initMap = () => {
       scrollwheel: false
     });
     DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
+
+fillRestaurantHTML(restaurant);
+getReviewsByID(restaurant);
+fillBreadcrumb(restaurant);
   });
+//DBHelper.postReview();
 }
+
 
 /**
  * Get current restaurant from page URL.
@@ -105,10 +119,12 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
+  console.log(restaurant.operating_hours + 'operating hours');
 
   // fill operating hours
   if (restaurant.operating_hours) {
     fillRestaurantHoursHTML();
+    console.log(restaurant.operating_hours + 'operating hours');
   }
   // fill reviews
 fillReviewsHTML();
@@ -160,9 +176,9 @@ const getReviewsByID = (restaurant = self.restaurant) => {
    const container = document.getElementById('reviews-container');
 
    if (!reviews) {
-     const noReviews = document.createElement('p');
-     noReviews.innerHTML = 'No posted reviews!';
-     container.appendChild(noReviews);
+     // const noReviews = document.createElement('p');
+     // noReviews.innerHTML = 'No posted reviews!';
+     // container.appendChild(noReviews);
      return;
    }
    const ul = document.getElementById('reviews-list');
@@ -170,6 +186,7 @@ const getReviewsByID = (restaurant = self.restaurant) => {
      ul.appendChild(createReviewHTML(review));
    });
    container.appendChild(ul);
+
  }
 
 /**
@@ -208,11 +225,14 @@ const dateTimeFromTimestamp = (timeStamp) => {
  * Add restaurant name to the breadcrumb navigation menu
  */
 const fillBreadcrumb = (restaurant = self.restaurant) => {
+
   const breadcrumb = document.getElementById('breadcrumb');
   const li = document.createElement('li');
   li.innerHTML = restaurant.name;
+
   breadcrumb.appendChild(li);
-  //console.log('fillBreadcrumb fn called!!!!');
+  console.log('fillBreadcrumb fn called!!!!');
+
 }
 
 /**
@@ -293,32 +313,20 @@ window.toggleRestaurantFav = () =>{
   }
 }
 
-/**
- * Initialise map after the page has loaded
-*/
-
- window.onload = () =>{
-   const map = document.getElementById('map-container');
-   map.style.display = 'block';
-   initMap();
-   fillBreadcrumb(restaurant);
-   fillRestaurantHTML(restaurant);
-   getReviewsByID(restaurant);
- };
 
 //showmap
 window.showmap = () => {
-  const bread = document.getElementById('breadcrumb');
-  const rest = document.getElementById('restaurant-container');
-  const rev= document.getElementById('reviews-container');
+  // const bread = document.getElementById('breadcrumb');
+   const rest = document.getElementById('restaurant-container');
+   const rev= document.getElementById('reviews-container');
   const map = document.getElementById('map-container');
-  bread.style.width = 'calc(50% - 40px)';
-  rest.style.width = 'calc(50% - 20px)';
-  rest.style.marginRight = '0';
-  rest.style.marginLeft = '0';
-  rev.style.width = 'calc(50% - 20px)';
-  rev.style.marginRight = '0';
-  rev.style.marginLeft = '0';
+  // bread.style.width = 'calc(50% - 40px)';
+  // rest.style.width = 'calc(50% - 20px)';
+   rest.style.marginRight = '0';
+   rest.style.marginLeft = '0';
+  // rev.style.width = 'calc(50% - 20px)';
+   rev.style.marginRight = '0';
+   rev.style.marginLeft = '0';
   map.style.display = 'block';
   initMap();
 }

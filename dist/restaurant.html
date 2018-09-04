@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#262932" charset="utf-8">
   <link rel="manifest" href="/manifest.json">
-    <meta name="Description" content="Specific Restaruants Page">
+  <meta name="Description" content="Specific Restaruants Page">
   <style>
-    @charset "utf-8";body,p{font-family:Arial,Helvetica,sans-serif;font-size:10pt;color:#333;line-height:1.5}body{background-color:#fdfdfd;margin:0;position:relative}li,ul{font-family:Arial,Helvetica,sans-serif;font-size:10pt;color:#333}a{color:orange;text-decoration:none}h1,h2{font-family:Arial,Helvetica,sans-serif;margin:0 0 20px}header,nav,section{display:block}#maincontent{background-color:#fdfdfd;min-height:100%}nav{text-align:center}nav{width:100%;background-color:#252831}nav h1{margin:auto}nav h1 a{color:#fff;font-size:calc(12px + 1vw);font-weight:200;letter-spacing:10px}#breadcrumb{width:100%}#breadcrumb li a{color:#0275d8;text-decoration:none}.inside header{position:fixed;top:0;width:100%;z-index:1000}#reviews-container h2{color:#b26000;font-size:24pt;font-weight:300;letter-spacing:-1px;padding-bottom:1pt;width:100%}#reviews-container form{width:85%}#add-review-form label{min-width:140px;display:inline-block;font-size:16px}@media only screen and (max-width:800px){#breadcrumb{width:calc(100% - 10px);font-size:calc(12px + 2vw);padding:0 0 0 10px;position:relative;margin:0}#restaurant-container{width:100%;padding:80px 10px}#reviews-container{width:100%;padding:20px 10px}.inside #map-container{width:100%;position:relative;height:70vh;top:85px}#maincontent{width:100%}}#breadcrumb{padding:10px 20px;list-style:none;background-color:#fdfdfd;font-size:17px;margin:0;width:calc(50% - 40px)}#breadcrumb li{display:inline;font-size:calc(12px + .5vw)}#map{height:400px;width:100%;background-color:#ccc}.inside #map-container{background:#00f 0 0;height:calc(100% - 105px);position:fixed;right:0;top:40px;width:50%}.inside #map{background-color:#ccc;height:100%;width:100%}#restaurant-container,#reviews-container{border-bottom:1px solid #d9d9d9;border-top:1px solid #fff;padding:80px 10px 30px;width:70%;margin-left:auto;margin-right:auto}#favorite-btn,#mapbtn,#restaurant-name{font-family:Arial,sans-serif;letter-spacing:0}#restaurant-name{font-weight:200;line-height:1.1;color:#b26000;font-size:20pt;margin:22px 0 10px}#favorite-btn,#mapbtn{background-color:#b26000;color:#fff;border:1px solid #fff;font-size:11pt;height:25px;margin:0;padding:0;width:120px}#add-review-form textarea,#restaurant-img{width:100%}#restaurant-address{font-size:12pt;margin:10px 0}#restaurant-cuisine{background-color:#333;color:#ddd;font-size:12pt;font-weight:300;letter-spacing:10px;margin:0 0 20px;padding:2px 0;text-align:center;width:100%}@media only screen and (max-width:800px){#breadcrumb{width:calc(100% - 10px);font-size:calc(12px + 2vw);padding:0 0 0 10px;position:relative;margin:0}#restaurant-container{width:100%;padding:80px 10px}#reviews-container{width:100%;padding:20px 10px}.inside #map-container{width:100%;position:relative;height:70vh;top:85px}#maincontent{width:100%}}
+    @charset "utf-8";body,p{font-family:Arial,Helvetica,sans-serif;font-size:10pt;color:#333;line-height:1.5}body{background-color:#fdfdfd;margin:0;position:relative}li,ul{font-family:Arial,Helvetica,sans-serif;font-size:10pt;color:#333}a{color:orange;text-decoration:none}h1,h2{font-family:Arial,Helvetica,sans-serif;margin:0 0 20px}header,nav,section{display:block}#maincontent{background-color:#fdfdfd;min-height:100%}#map,nav{width:100%}nav{text-align:center;background-color:#252831}nav h1{margin:auto}nav h1 a{color:#fff;font-size:calc(12px + 1vw);font-weight:200;letter-spacing:10px}#map{height:400px;background-color:#ccc}#breadcrumb{padding:10px 20px;list-style:none;background-color:#fdfdfd;font-size:17px;margin:0;width:100%;width:calc(50% - 40px)}#breadcrumb li{display:inline;font-size:calc(12px + .5vw)}#breadcrumb li a{color:#0275d8;text-decoration:none}.inside header{position:fixed;top:0;width:100%;z-index:1000}.inside #map-container{background:#00f 0 0;height:calc(100% - 105px);position:fixed;right:0;top:40px;width:50%}.inside #map{background-color:#ccc;height:100%;width:100%}#reviews-container h2{color:#b26000;font-size:24pt;font-weight:300;letter-spacing:-1px;padding-bottom:1pt;width:100%}#reviews-container form{width:85%}#restaurant-container,#reviews-container{border-bottom:1px solid #d9d9d9;border-top:1px solid #fff;padding:80px 10px 30px;width:calc(50% - 20px);margin-left:auto;margin-right:auto}#favorite-btn,#mapbtn,#restaurant-name{font-family:Arial,sans-serif;letter-spacing:0}#restaurant-name{font-weight:200;line-height:1.1;color:#b26000;font-size:20pt;margin:22px 0 10px}#favorite-btn,#mapbtn{background-color:#b26000;color:#fff;border:1px solid #fff;font-size:11pt;height:25px;margin:0;padding:0;width:120px}#restaurant-img{width:100%}#restaurant-address{font-size:12pt;margin:10px 0}#restaurant-cuisine{background-color:#333;color:#ddd;font-size:12pt;font-weight:300;letter-spacing:10px;margin:0 0 20px;padding:2px 0;text-align:center;width:100%}#add-review-form label{min-width:140px;display:inline-block;font-size:16px;background-color:#eee}#add-review-form textarea{width:100%;background-color:#eee}#add-review-form select{-webkit-box-sizing:border-box;box-sizing:border-box;background-color:#eee}@media only screen and (max-width:800px){#breadcrumb{width:calc(100% - 10px);font-size:calc(12px + 2vw);padding:0 0 0 10px;position:relative;margin:0}#restaurant-container,#reviews-container{width:100%;padding:80px 10px;background-color:green}#reviews-container{padding:20px 10px}.inside #map-container{width:100%;position:relative;height:70vh;top:85px}#maincontent{width:100%}}
   </style>
   <link rel="preload" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css"></noscript>
@@ -16,12 +16,15 @@
   <noscript><link rel="stylesheet" href="css/styles.css" type="text/css"></noscript>
   <script>!function(n){"use strict";n.loadCSS||(n.loadCSS=function(){});var o=loadCSS.relpreload={};if(o.support=function(){var e;try{e=n.document.createElement("link").relList.supports("preload")}catch(t){e=!1}return function(){return e}}(),o.bindMediaToggle=function(t){var e=t.media||"all";function a(){t.media=e}t.addEventListener?t.addEventListener("load",a):t.attachEvent&&t.attachEvent("onload",a),setTimeout(function(){t.rel="stylesheet",t.media="only x"}),setTimeout(a,3e3)},o.poly=function(){if(!o.support())for(var t=n.document.getElementsByTagName("link"),e=0;e<t.length;e++){var a=t[e];"preload"!==a.rel||"style"!==a.getAttribute("as")||a.getAttribute("data-loadcss")||(a.setAttribute("data-loadcss",!0),o.bindMediaToggle(a))}},!o.support()){o.poly();var t=n.setInterval(o.poly,500);n.addEventListener?n.addEventListener("load",function(){o.poly(),n.clearInterval(t)}):n.attachEvent&&n.attachEvent("onload",function(){o.poly(),n.clearInterval(t)})}"undefined"!=typeof exports?exports.loadCSS=loadCSS:n.loadCSS=loadCSS}("undefined"!=typeof global?global:this);</script>
   <style>
-  html {
-    box-sizing: border-box;
-  }
-  *, *:before, *:after {
-    box-sizing: inherit;
-  }
+    html {
+      box-sizing: border-box;
+    }
+
+    *,
+    *:before,
+    *:after {
+      box-sizing: inherit;
+    }
   </style>
 
   <title>Restaurant Info</title>
@@ -35,7 +38,7 @@
       <h1><a href="/" tabindex="0">Restaurant Reviews</a></h1>
     </nav>
     <!-- Beginning breadcrumb -->
-    <ul id="breadcrumb" aria-label="breadcrumb link">
+    <ul id="breadcrumb" aria-label="Breadcrumb link">
       <li><a href="/" tabindex="1" aria-current="page">Home</a></li>
     </ul>
     <!-- End breadcrumb -->
@@ -55,38 +58,39 @@
       <h2 id="restaurant-name"></h2>
       <button id="favorite-btn" onclick="window.toggleRestaurantFav();"></button>
       <button id="mapbtn" onclick="window.showmap();">Show map</button>
-
       <img id="restaurant-img">
       <p id="restaurant-cuisine"></p>
       <p id="restaurant-address"></p>
       <table id="restaurant-hours"></table>
-      <section id="reviews-container">
-        <div>
-          <h2>
+    </section>
+    <section id="reviews-container">
+      <div>
+        <h2>
             Add your restaurant review
           </h2>
-        </div>
-        <form action="" id="add-review-form">
-          <label for="reviewerName">Reviewer name</label>
-          <input type="text" id="reviewerName" name="reviewerName" placeholder="Name" aria-label="Reviewer Name" required aria-required="true">
-            <div>
-                <label for="restaurantRating">Restaurant Rating</label>
-                <select id="restaurantRating" name="restaurantRating" aria-label="Restaurant Rating" required aria-required="true">
+      </div>
+      <form action="" id="add-review-form">
+        <label for="reviewerName">Reviewer name</label>
+        <input type="text" id="reviewerName" name="reviewerName" placeholder="Name" aria-label="Reviewer Name" required aria-required="true">
+        <div>
+          <label for="restaurantRating">Restaurant Rating</label>
+          <select id="restaurantRating" name="restaurantRating" aria-label="Restaurant Rating" required aria-required="true">
                   <option value="1">1</option>
                   <option value="2">2</option>
                   <option value="3">3</option>
                   <option value="4">4</option>
                   <option value="5" selected>5</option>
                 </select>
-              </div>
-            <textarea name="reviewComment" id="reviewComment" aria-label="Review comment" placeholder="The restaurant was..." required aria-required="true"></textarea>
-            <input type="button" onclick="addReview()" id="submitReview" value="Send Review">
-        </form>
-        <h2>Reviews</h2>
-        <ul id="reviews-list"></ul>
+        </div>
+        <textarea name="reviewComment" id="reviewComment" aria-label="Review comment" placeholder="The restaurant was..." required aria-required="true"></textarea>
+        <input type="button" onclick="addReview()" id="submitReview" value="Send Review">
+      </form>
+      <h2>Reviews</h2>
+      <ul id="reviews-list"></ul>
 
-      </section>  <!-- End reviews -->
-  </section></main>
+    </section>
+    <!-- End reviews -->
+  </main>
   <!-- End main -->
 
   <!-- Beginning footer -->
@@ -95,24 +99,23 @@
   </footer>
   <!-- End footer -->
 
-
-<!-- Minifyed javascript file -->
-<script type="application/javascript" charset="utf-8" src="js/restaurant_all.js"></script>
+  <!-- Minifyed javascript file -->
+  <script type="application/javascript" charset="utf-8" src="js/restaurant_all.js"></script>
 
 
   <!-- Google Maps -->
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC5_Noee-qKJ9CyY5D1eBA2DRMtLHPAiPQ&libraries=places&callback=initMap"></script>
   <!-- Register the service worker -->
   <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-      navigator.serviceWorker.register('/sw.js').then(function() {
-        console.log('Registration worked!');
-      }).catch(function() {
-      console.log('Registration failed!');
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js').then(function() {
+          console.log('Registration worked!');
+        }).catch(function() {
+          console.log('Registration failed!');
+        });
       });
-    });
-  }
+    }
   </script>
   <!-- End scripts -->
 
