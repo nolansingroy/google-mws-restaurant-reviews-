@@ -1,6 +1,6 @@
 # Mobile Web Specialist Certification Course
 ---
-#### _Stage Two Restaurant Reviews_
+#### _Stage Three Restaurant Reviews_
 
 ##  Overview
 This project is for the Mobile Web Specialist course from Udacity and has the following features.
@@ -11,20 +11,37 @@ This project is for the Mobile Web Specialist course from Udacity and has the fo
 * A restaurant info page
 * Accessibility updates
 * Performance Updates
+  * Showmap button
   * Critical rending inline css
   * Lazy Observer for offscreen images
   * Compression of files
   * Uses Babel.js to convert ES6 to ES5 for better browser compatibility   
 * Service worker for offline browsing
 * Caching using IndexedDB
+  * restaurant DB
+    * restaurants objectStore
+    * OfflineReviews objectStore
+    * Reviews objectStore filtered by restaurant_id index
 * Gulp build
+* Light House Audit Scores
+  * PWA > 90
+  * Performance > 90
+  * Accessibility > 90
+
+* Responsive Design
+  * Form to add a review
+  * control to mark restaurant as favorite
+* Offline Use
+  * user is able to make post offline stored in DB to be sent when onLine
+  * Pages that were visit are cached for offline revisits
 * Other rubric requirements
 
 
 ### Setup
 1. clone project
 ```
-https://github.com/nolansingroy/mws-restaurant-phase-1
+$ git clone https://github.com/nolansingroy/google-mws-restaurant-reviews-.git
+
 ```
 2. Install project dependencies
 ```
@@ -45,7 +62,7 @@ $ gulp build -- compiles img and js
 $ gulp serve -- runs the project at localhost:3000
 ```
 * note you should have the server running
-[Server](https://github.com/udacity/mws-restaurant-stage-2)
+[Server](https://github.com/udacity/mws-restaurant-stage-3)
 
 * To perform an Audit open chrome dev tools Light House Application
 

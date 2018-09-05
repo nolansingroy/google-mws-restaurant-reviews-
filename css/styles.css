@@ -328,7 +328,7 @@ nav h1 a {
   width: 100%;
 		background-color: #eee;
 }
-#add-review-form select {
+#add-review-form select, input {
 	box-sizing: border-box;
 	background-color: #eee;
 }
