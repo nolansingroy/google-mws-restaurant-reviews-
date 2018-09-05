@@ -179,7 +179,7 @@ nav h1 a {
   font-size: 17px;
   margin: 0;
   /*width: 100%;*/
-  width: calc(50% - 40px);
+  width: calc(20% - 40px);
 }
 
 /* Display list items side by side */
@@ -328,11 +328,6 @@ nav h1 a {
   width: 100%;
 		background-color: #eee;
 }
-/* #add-review-form select, input {
-	box-sizing: border-box;
-	background-color: #eee;
-} */
-
 
 /*If map button has not been click MQ for width greater then 800px*/
 /* @media (max-width:1500px) and (min-width:800px) {
