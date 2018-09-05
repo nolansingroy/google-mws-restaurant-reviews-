@@ -328,10 +328,10 @@ nav h1 a {
   width: 100%;
 		background-color: #eee;
 }
-#add-review-form select, input {
+/* #add-review-form select, input {
 	box-sizing: border-box;
 	background-color: #eee;
-}
+} */
 
 
 /*If map button has not been click MQ for width greater then 800px*/
