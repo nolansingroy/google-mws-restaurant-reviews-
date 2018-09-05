@@ -135,11 +135,9 @@ fillReviewsHTML();
  */
 const fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => {
   const hours = document.getElementById('restaurant-hours');
-
-  const caption = document.createElement('caption');
-  caption.innerHTML = `${self.restaurant.name}'s Hours of Operation`;
-  hours.appendChild(caption)
-
+   const caption = document.createElement('caption');
+   caption.innerHTML = `${self.restaurant.name}'s Hours of Operation`;
+   hours.appendChild(caption)
 
   for (let key in operatingHours) {
     const row = document.createElement('tr');
@@ -316,17 +314,21 @@ window.toggleRestaurantFav = () =>{
 
 //showmap
 window.showmap = () => {
-  // const bread = document.getElementById('breadcrumb');
    const rest = document.getElementById('restaurant-container');
    const rev= document.getElementById('reviews-container');
   const map = document.getElementById('map-container');
-  // bread.style.width = 'calc(50% - 40px)';
-  // rest.style.width = 'calc(50% - 20px)';
    rest.style.marginRight = '0';
    rest.style.marginLeft = '0';
-  // rev.style.width = 'calc(50% - 20px)';
    rev.style.marginRight = '0';
    rev.style.marginLeft = '0';
   map.style.display = 'block';
+/*Throws an Error in the Console log but actually does work by removing
+the extra Children
+**/
+  var d = document.getElementById("breadcrumb");
+  var d_nested = document.getElementById("li");
+  var throwawayNode = d.removeChild(d_nested);
+
   initMap();
+  //removeChildren();
 }

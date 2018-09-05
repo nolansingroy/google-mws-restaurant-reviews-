@@ -178,7 +178,7 @@ nav h1 a {
   background-color: #fdfdfd;
   font-size: 17px;
   margin: 0;
-  width: 100%;
+  /*width: 100%;*/
   width: calc(50% - 40px);
 }
 
@@ -358,7 +358,7 @@ nav h1 a {
   #reviews-container {
     width: 100%;
     padding: 80px 10px;
-		background-color: green;
+/*		background-color: green;**/
   }
 
   #reviews-container {

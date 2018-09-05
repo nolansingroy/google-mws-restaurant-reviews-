@@ -4,6 +4,7 @@ var urlsToCache = [
   '/index.html',
   '/restaurant.html',
   '/manifest.json',
+  '/favicon.ico',
   '/css/styles.css',
   '/js/all.js',
   '/js/restaurant_all.js',

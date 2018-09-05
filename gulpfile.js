@@ -135,7 +135,7 @@ gulp.task("css", () => {
 
 
 gulp.task('copy', function() {
-  gulp.src(['manifest.json', 'index.html', 'restaurant.html', "sw.js"])
+  gulp.src(['manifest.json', 'index.html', 'restaurant.html', "sw.js",'favicon.ico'])
     .pipe(
       $.if(
         /\.html$/,
